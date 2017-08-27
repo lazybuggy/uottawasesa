@@ -16,7 +16,7 @@ Rails.application.configure do
 
   # Disable serving static files from the `/public` folder by default since
   # Apache or NGINX already handles this.
-  config.public_file_server.enabled = ENV['RAILS_SERVE_STATIC_FILES'].present?
+  config.public_file_server.enabled = false
 
   # Compress JavaScripts and CSS.
   config.assets.js_compressor = :uglifier
@@ -69,9 +69,10 @@ Rails.application.configure do
   # Use a real queuing backend for Active Job (and separate queues per environment)
   # config.active_job.queue_adapter     = :resque
   # config.active_job.queue_name_prefix = "uottawasesa_#{Rails.env}"
-  config.action_mailer.perform_caching = false
+  # config.action_mailer.perform_caching = false
 
-  config.action_mailer.default_url_options = { :host => 'uottawa-sesa.ca'}
+  #SMTP GMail Settings
+  config.action_mailer.default_url_options = { :host => 'uottawa-sesa.herokuapp.com'}
 
   config.action_mailer.delivery_method = :smtp
 

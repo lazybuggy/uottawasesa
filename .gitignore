@@ -16,3 +16,13 @@
 # Ignore all logfiles and tempfiles.
 /log/*.log
 /tmp
+
+# Mac stuff
+._*.*
+
+
+public/assets/
+shared/*
+vendor/bundle/
+puma.sh
+__og.unicorn.sh

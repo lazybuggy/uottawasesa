@@ -3,42 +3,38 @@ class StaticPagesController < ApplicationController
   def home
     @club_member = ClubMember.new
     @current_members = [
-      {firstName: 'Alex',
-        lastName: 'Kluew',
+      {firstName: 'Nel',
+        lastName: 'Opolski',
         role: 'President',
-        imgUrl: "#{view_context.asset_path('current_members/alex.jpg')}",
-        hasWebsite: true,
-        websiteUrl: 'http://getaclue.me/',
-        yearsActive: '2014-present'},
-      {firstName: 'Arsani',
-        lastName: 'Guirguis',
-        role: 'Vice President',
-        imgUrl: "#{view_context.asset_path('current_members/arsani.png')}",
+        imgUrl: "#{view_context.asset_path('current_members/nel.png')}",
         yearsActive: '2015-present'},
-      {firstName: 'Kyle',
+      { firstName: 'Tolu',
+        lastName: 'Olubode',
+        role: 'Vice President',
+        imgUrl: "#{view_context.asset_path('current_members/tolu.jpg')}",
+        yearsActive: '2017-present'
+      },{
+        firstName: 'Kyle',
         lastName: 'Kung',
         role: 'VP Academic',
         imgUrl: "#{view_context.asset_path('current_members/kyle.png')}",
-        yearsActive: '2015-present'},
-      {firstName: 'Lucia',
-        lastName: 'Okeh',
-        role: 'VP Social',
-        imgUrl: "#{view_context.asset_path('current_members/lucia.png')}",
         yearsActive: '2015-present'},
       {firstName: 'Anthony A.',
         lastName: 'Nader',
         role: 'VP Marketing',
         imgUrl: "#{view_context.asset_path('current_members/anthony.png')}",
         yearsActive: '2016-present'},
+      {firstName: 'Lucia',
+        lastName: 'Okeh',
+        role: 'VP Social',
+        imgUrl: "#{view_context.asset_path('current_members/lucia.png')}",
+        yearsActive: '2015-present'},
       {firstName: 'Jonathon',
         lastName: 'Guillotte-Blouin',
         role: 'VP Communication',
+        hasWebsite: true,
+        websiteUrl: 'http://jonathangb.com/',
         imgUrl: "#{view_context.asset_path('current_members/jonathon.jpg')}",
-        yearsActive: '2015-present'},
-      {firstName: 'Nel',
-        lastName: 'Opolski',
-        role: 'Director',
-        imgUrl: "#{view_context.asset_path('current_members/nel.png')}",
         yearsActive: '2015-present'},
       {firstName: 'Anushka',
         lastName: 'Paliwal',
@@ -47,14 +43,9 @@ class StaticPagesController < ApplicationController
         yearsActive: '2016-present'},
       {firstName: 'Tayo',
         lastName: 'Odueke',
-        role: 'Editor-in-Chief',
+        role: 'Director',
         imgUrl: "#{view_context.asset_path('current_members/tayo.png')}",
         yearsActive: '2015-present'},
-      {firstName: 'Kizz',
-        lastName: 'Patrick',
-        role: 'Director',
-        imgUrl: "#{view_context.asset_path('current_members/kizz.png')}",
-        yearsActive: '2016-present'},
       {firstName: 'Leila',
         lastName: 'Compoare',
         role: 'Director',
@@ -83,9 +74,16 @@ class StaticPagesController < ApplicationController
   @club_member.valid?
 
     if @club_member.save
-        flash[:successful_join] = "You've successfully joined!"
-        UserMailer.new_member_confirmation(@club_member.email,
-          @club_member.first_name, @club_member.last_name).deliver
+
+        begin
+          UserMailer.new_member_confirmation(@club_member.email,
+            @club_member.first_name, @club_member.last_name).deliver
+          flash[:successful_join] = "You've successfully joined!"
+        rescue Net::SMTPAuthenticationError, Net::SMTPServerBusy, Net::SMTPSyntaxError, Net::SMTPFatalError, Net::SMTPUnknownError => e
+          @club_member.destroy
+          flash[:alert] = "Please send an email to uottawa.sesa@gmail.com"
+        end
+
         redirect_to join_path
     else
       render 'join'
@@ -100,6 +98,48 @@ class StaticPagesController < ApplicationController
     @past_status_posted = false
 
     @events = [
+      {
+        banner: 'events_2017/feb-april_ruby_on_rails.jpg',
+        event: 'SESA Ruby on Rails Winter 2017 Tutorials',
+        facebook_url: 'https://www.facebook.com/events/389965414686385/',
+        type: 'completed'
+      },
+      {
+        banner: 'events_2017/March_Startup-Weekend-W-2017.png',
+        event: 'Startup Weekend Ottawa',
+        facebook_url: 'https://www.facebook.com/events/1270558846372280/',
+        type: 'completed'
+      },
+      {
+        banner: 'events_2017/feb_resume_review.jpg',
+        event: 'SESA Resume Review',
+        facebook_url: 'https://www.facebook.com/events/299360073800010/',
+        type: 'completed'
+      },
+      {
+        banner: 'events_2016/nov_klipfolio.png',
+        event: 'SESA Goes to Klipfolio',
+        facebook_url: 'https://www.facebook.com/events/1863616040534303/',
+        type: 'completed'
+      },
+      {
+        banner: 'events_2016/nov_startup_weeknd.jpg',
+        event: 'Startup Weekend Fall 2016',
+        facebook_url: 'https://www.facebook.com/events/1358385600849660/',
+        type: 'completed'
+      },
+      {
+        banner: 'events_2016/oct_front_end_workshop.jpg',
+        event: 'Front End Workshop',
+        facebook_url: 'https://www.facebook.com/events/1123806157698514/',
+        type: 'completed'
+      },
+      {
+        banner: 'events_2016/september_meet-n-greet.png',
+        event: 'Meet and Greet',
+        facebook_url: 'https://www.facebook.com/events/1774875126059212/',
+        type: 'completed'
+        },
       {
         banner: 'events_2016/june_klipfolio.jpg',
         event: 'Klipfolio Tech Talk',
@@ -257,6 +297,10 @@ class StaticPagesController < ApplicationController
         :facebook_url => 'https://www.facebook.com/events/255970374595125/?ref=2&ref_dashboard_filter=past',
         type: 'completed'
       }]
+  end
+
+  def alumni
+    render 'alumni'
   end
 
   def members
